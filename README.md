@@ -13,6 +13,9 @@ Animations exported from Flump are cleverly optimized:
 Lump currently supports all of the features of Flump, _except_ skewing of sprite parts.
 See "missing features" below for more info.
 
+## Status
+The library has been in use for some time now in a game of mine, and seems to be pretty stable. Nonetheless, it may be improved in a number of ways. Please consider this beta status.
+
 ## Demo
 A simple demo playing Flump's logo animation is available in `/demo`. It requires Love2D 0.10.1
 
