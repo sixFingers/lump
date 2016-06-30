@@ -22,11 +22,11 @@ end
 function love.keypressed(code)
     if (code == "left") then
         currentClip = currentClip > 1 and currentClip - 1 or #clips
+        movieClip:gotoAndPlay(clips[currentClip], 1)
     elseif (code == "right") then
         currentClip = currentClip < #clips and currentClip + 1 or 1
+        movieClip:gotoAndPlay(clips[currentClip], 1)
     end
-
-    movieClip:gotoAndPlay(clips[currentClip], 1)
 end
 
 function love.update(dt)
