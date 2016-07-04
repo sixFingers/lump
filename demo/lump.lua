@@ -265,6 +265,7 @@ end
 --[[Animation]]--
 -----------------
 local Animation = {}
+Animation.__index = Animation
 
 local jsonCache = {}
 local textureCache = {}
@@ -273,7 +274,6 @@ local animationCache = {}
 function Animation.new(jsonPath, texturePath)
     local animation = {}
     setmetatable(animation, Animation)
-    Animation.__index = Animation
 
     local cacheKey = jsonPath .. "." .. texturePath
     if (animationCache[cacheKey]) then
@@ -413,13 +413,13 @@ end
 --[[MovieClip]]--
 -----------------
 local MovieClip = {}
+MovieClip.__index = MovieClip
 
 function MovieClip.new(json, texture, framerate)
     local animation = Animation.new(json, texture)
 
     local mc = {}
     setmetatable(mc, MovieClip)
-    MovieClip.__index = MovieClip
 
     mc.animation = animation
     mc.clip = mc:getClip()
