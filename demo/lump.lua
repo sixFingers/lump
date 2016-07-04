@@ -383,7 +383,9 @@ function Animation:getKeyFrame(clipId, layerName, frameIndex)
     for l, layer in ipairs(layers) do
         if (layer.name == layerName) then
             for f, frame in ipairs(layer.frames) do
-                if (frame.index > frameIndex) then
+                if (frame.index == frameIndex) then
+                    return layer.frames[f]
+                elseif (frame.index > frameIndex) then
                     return layer.frames[f - 1]
                 end
             end
