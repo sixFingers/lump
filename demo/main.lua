@@ -1,7 +1,4 @@
-Class = require("lib/class")
-JSON = require("lib/json")
-Animation = require("lib/animation")
-MovieClip = require("lib/movieclip")
+MovieClip = require("lump")
 
 local json = "assets/library.json"
 local atlas = "assets/atlas0.png"
@@ -13,8 +10,7 @@ local clips = {"idle", "walk", "attack", "defeat"}
 local currentClip = 1
 
 function love.load()
-    local animation = Animation(json, atlas)
-    movieClip = MovieClip(animation, framerate)
+    movieClip = MovieClip.new(json, atlas, framerate)
     movieClip.x, movieClip.y = sw / 2, sh / 2
     movieClip:gotoAndPlay("idle", 1)
 end
