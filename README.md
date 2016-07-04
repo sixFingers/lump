@@ -19,32 +19,17 @@ The library has been in use for some time now in a game of mine, and seems to be
 ## Demo
 A simple demo playing Flump's logo animation is available in `/demo`. It requires Love2D 0.10.1
 
-## Dependencies
-Lump currently uses [Hump's Class](https://github.com/vrld/hump) and [rxi's JSON](https://github.com/rxi/json.lua). Both of these are soft dependencies you can easily swap with something of your choice.
-
-## Library Structure
-Lump splits animation into:
-
-- Animation: this is the definition of the animation, loaded from a JSON file and pointing to a texture
-- MovieClip: this is the player for the animation
-
-It was designed this way to allow for multiple movieclips to share the same animation.
-
 ## MovieClip API
 
 ### Requiring and initializing
 
 ```
-Class = require("class")
-JSON = require("json")
-Animation = require("animation")
-MovieClip = require("movieclip")
+MovieClip = require("lump")
 
 local json = "library.json"
 local atlas = "atlas.png"
 
-animation = Animation(json, atlas)
-mc = MovieClip(animation, 33) -- loads the given animation, playing it at given framerate
+mc = MovieClip.new(json, atlas, 33) -- loads the given animation, playing it at given framerate
 ```
 
 After initialization, the movieclip frame pointer is set at the first frame (1) of the first available clip.
@@ -84,13 +69,7 @@ mc.play()
 
 Flump exports Flash frame labels, and the library offers a simple way to hook into the enterframe event.
 This way, it's possible to use labeled frames as triggers for actions in your code.
-All there is to do is to define `mc.onFrameLabel` function:
-
-```
-mc.onFrameLabel = function(label, frame)
-```
-
-The function will be called every time a labeled frame is encountered, and will be passed the label and the frame number relative to the current clip. A good example is playing a step sound everytime a character's foot is on ground:
+All there is to do is to define `.onFrameLabel` function. The function will be called every time a labeled frame is encountered, and will be passed the label and the frame number relative to the current clip. A good example is playing a step sound everytime a character's foot is on ground:
 
 ```
 mc.onFrameLabel = function(label, frame)
@@ -123,6 +102,14 @@ mc.scaleX, mc.scaleY = 2, 2
 -- Flip on axis
 mc.scaleX, mc.scaleY = -1, 1
 ```
+
+### Caching of animations
+Everytime you build a movieclip, internally Lump creates:
+
+- an animation definition, containing data for frames and clips;
+- a movieclip object, which plays the animation.
+
+For performance, Lump will cache animations so that every movieclip created with the same json and same texture will be actually pointing to the same animation definition. No duplicate animation instances will be created.
 
 ### Missing features
 Currently, Lump misses support for skewing of sprite parts.
