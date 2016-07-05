@@ -558,6 +558,7 @@ function MovieClip:gotoAndStop(clipId, frame)
     self.paused = false
     self.clip = self:getClip(clipId)
     self.currentClipName = self.clip.id
+    self.duration = self.clip.totalFrames / self.framerate
     self.elapsedTime = frame * self.duration / self.clip.totalFrames
     self:update(0)
     self.paused = true
@@ -579,7 +580,6 @@ function MovieClip:draw()
 
     for _, frameValues in ipairs(self.frameUpdates) do
         local component, x, y, scaleX, scaleY, rotation, skewX, skewY, pivotX, pivotY = unpack(frameValues)
-
         love.graphics.draw(texture, component.quad, x, y, rotation, scaleX, scaleY, pivotX, pivotY)
     end
 
