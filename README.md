@@ -10,9 +10,6 @@ Animations exported from Flump are cleverly optimized:
 - the memory footprint is generally smaller than that of prerendered sprite animations;
 - they're smooooth as flumps.
 
-Lump currently supports all of the features of Flump, _except_ skewing of sprite parts.
-See "missing features" below for more info.
-
 ## Status
 The library has been in use for some time now in a game of mine, and seems to be pretty stable. Nonetheless, it may be improved in a number of ways. Please consider this beta status.
 
@@ -110,8 +107,3 @@ Everytime you build a movieclip, internally Lump creates:
 - a movieclip object, which plays the animation.
 
 For performance, Lump will cache animations so that every movieclip created with the same json and same texture will be actually pointing to the same animation definition. No duplicate animation instances will be created.
-
-### Missing features
-Currently, Lump misses support for skewing of sprite parts.
-This is a somewhat [known issue](https://github.com/tconkling/flump/issues/6), which is easily solvable in other contexts where a typical affine matrix can be created and pushed to the GPU.
-Sadly, LOVE2D doesn't allow to build a full transform matrix. It allows to push/pop matrix changes with only a _single_ transformation at a time (scale, rotation, position or scale), but not more. I still can't find a way to express Flash rotation transforms (which are themselves a bit strange) with LOVE's features. If anyone is interested in helping on this, it would be _really_ appreciated.
