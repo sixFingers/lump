@@ -569,10 +569,35 @@ function MovieClip:gotoAndPlay(clipId, frame)
     self.paused = false
 end
 
+local function fromFlashToLove(scaleX, scaleY, skewX, skewY)
+  -- Obtain the matrix
+  local m00,           m01,
+        m10,           m11 =
+         scaleX* math.cos(skewY), scaleY*-math.sin(skewX),
+         scaleX* math.sin(skewY), scaleY* math.cos(skewX)
+
+  -- Perform SVD, per
+  --http://scicomp.stackexchange.com/questions/8899/robust-algorithm-for-2x2-svd
+  -- (SVD decomposes an arbitrary 2x2 transform matrix into
+  --  1 rotation + 1 scaling + 1 rotation; we need it because LÖVE doesn't let
+  --  us enter an arbitrary matrix)
+
+  local E, F, G, H = (m00+m11)*0.5, (m00-m11)*0.5, (m10+m01)*0.5, (m10-m01)*0.5
+  local Q, R = math.sqrt(E*E+H*H), math.sqrt(F*F+G*G)
+  local sx, sy = Q+R, Q-R
+  local a1 = math.atan2(G, F)
+  local a2 = math.atan2(H, E)
+
+  -- ... or return the SVD result
+  -- (note LÖVE requires the angles to be applied in reverse order)
+  return sx, sy, (a2-a1)*0.5, (a2+a1)*0.5
+end
+
 function MovieClip:draw()
     local components = self.animation.components
     local texture = self.animation.texture
 
+    -- global transform
     love.graphics.push()
     love.graphics.translate(self.x, self.y)
     love.graphics.rotate(self.rotation)
@@ -580,7 +605,18 @@ function MovieClip:draw()
 
     for _, frameValues in ipairs(self.frameUpdates) do
         local component, x, y, scaleX, scaleY, rotation, skewX, skewY, pivotX, pivotY = unpack(frameValues)
-        love.graphics.draw(texture, component.quad, x, y, rotation, scaleX, scaleY, pivotX, pivotY)
+        local scaleX, scaleY, skewX, skewY = fromFlashToLove(scaleX, scaleY, skewX, skewY)
+
+        -- local transform
+        love.graphics.push()
+        love.graphics.translate(x, y)
+        love.graphics.rotate(skewY)
+        love.graphics.scale(scaleX, scaleY)
+        love.graphics.rotate(skewX)
+
+        love.graphics.draw(texture, component.quad, 0, 0, 0, 1, 1, pivotX, pivotY)
+
+        love.graphics.pop()
     end
 
     love.graphics.pop()
