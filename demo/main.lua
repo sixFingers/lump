@@ -3,7 +3,7 @@ MovieClip = require("lump")
 local json = "assets/library.json"
 local atlas = "assets/atlas0.png"
 local movieClip = nil
-local framerate = 60
+local framerate = 33
 
 local sw, sh = love.graphics.getDimensions()
 local clips = {"idle", "walk", "attack", "defeat"}
